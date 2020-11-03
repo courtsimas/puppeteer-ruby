@@ -24,6 +24,8 @@ class Puppeteer::BrowserRunner
       stdin, @stdout, @stderr, @thread = Open3.popen3(env, executable_path, *args)
       stdin.close
       @pid = @thread.pid
+    rescue Errno::ENOENT => err
+      raise LaunchError.new(err.message)
     end
 
     def kill
@@ -38,6 +40,12 @@ class Puppeteer::BrowserRunner
     end
 
     attr_reader :stdout, :stderr
+  end
+
+  class LaunchError < StandardError
+    def initialize(reason)
+      super("Failed to launch browser! #{reason}")
+    end
   end
 
   # @param {!(Launcher.LaunchOptions)=} options
@@ -123,11 +131,11 @@ class Puppeteer::BrowserRunner
 
   # @return {Promise}
   def kill
-    unless @closed
-      @proc.kill
-    end
     if @temp_directory
       FileUtils.rm_rf(@temp_directory)
+    end
+    unless @closed
+      @proc.kill
     end
   end
 

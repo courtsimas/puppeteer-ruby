@@ -70,7 +70,7 @@ class Puppeteer::LifecycleWatcher
 
     @listener_ids = {}
     @listener_ids['client'] = @frame_manager.client.add_event_listener('Events.CDPSession.Disconnected') do
-      terminate(TerminatedError.new('Navigation failed because browser has disconnected!'))
+      # terminate(TerminatedError.new('Navigation failed because browser has disconnected!'))
     end
     @listener_ids['frame_manager'] = [
       @frame_manager.add_event_listener('Events.FrameManager.LifecycleEvent') do |_|

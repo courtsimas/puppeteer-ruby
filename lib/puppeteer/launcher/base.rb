@@ -35,7 +35,7 @@ module Puppeteer::Launcher
       else
         case self
         when Chrome
-          '/usr/bin/google-chrome'
+          ENV.fetch('GOOGLE_CHROME_BIN').presence || '/usr/bin/google-chrome'
         when Firefox
           '/usr/bin/firefox'
         end
